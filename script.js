@@ -128,18 +128,57 @@ function createTableRow(session) {
   totalCell.textContent = session.total;
   newRow.appendChild(totalCell);
 
-  // Delete button column
+  // Modify/Delete button column
+  const modifyDeleteButtonCell = document.createElement("td");
+  const modifyButton = document.createElement("button");
+  modifyButton.textContent = "Modify";
+  modifyButton.classList.add("modify-button");
+  modifyButton.addEventListener("click", function () {
+    modifySession(newRow, session);
+  });
+  modifyDeleteButtonCell.appendChild(modifyButton);
+  newRow.appendChild(modifyDeleteButtonCell);
+
+  sessionTableBody.appendChild(newRow);
+}
+
+function modifySession(row, session) {
+  const activity = prompt("Modify the activity:", session.activity);
+  const intensity = parseFloat(prompt("Modify the intensity percentage (0-100):", session.intensity));
+
+  if (activity !== null && intensity !== null) {
+    session.activity = activity;
+    session.intensity = intensity;
+
+    const elapsedTime = hours * 3600 + minutes * 60 + seconds;
+    const actualTime = elapsedTime * (intensity / 100);
+
+    session.duration = formatTime(elapsedTime);
+    session.total = formatTime(actualTime);
+
+    row.cells[1].textContent = activity;
+    row.cells[2].textContent = intensity;
+    row.cells[3].textContent = session.duration;
+    row.cells[4].textContent = session.total;
+
+    // Save updated sessions to localStorage
+    localStorage.setItem("studySessions", JSON.stringify(previousSessions));
+
+    // Calculate and display summary
+    calculateSummary();
+  }
+}
+
+function createDeleteButton(row, session) {
   const deleteButtonCell = document.createElement("td");
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
   deleteButton.classList.add("delete-button");
   deleteButton.addEventListener("click", function () {
-    deleteSession(newRow, session);
+    deleteSession(row, session);
   });
   deleteButtonCell.appendChild(deleteButton);
-  newRow.appendChild(deleteButtonCell);
-
-  sessionTableBody.appendChild(newRow);
+  row.appendChild(deleteButtonCell);
 }
 
 function deleteSession(row, session) {
@@ -155,8 +194,53 @@ function deleteSession(row, session) {
   // Save updated sessions to localStorage
   localStorage.setItem("studySessions", JSON.stringify(previousSessions));
 
-  // Recalculate and display summary
+  // Calculate and display summary
   calculateSummary();
+}
+
+function createTableRow(session) {
+  const newRow = document.createElement("tr");
+
+  // Date column
+  const dateCell = document.createElement("td");
+  dateCell.textContent = session.date;
+  newRow.appendChild(dateCell);
+
+  // Activity column
+  const activityCell = document.createElement("td");
+  activityCell.textContent = session.activity;
+  newRow.appendChild(activityCell);
+
+  // Intensity column
+  const intensityCell = document.createElement("td");
+  intensityCell.textContent = session.intensity;
+  newRow.appendChild(intensityCell);
+
+  // Duration column
+  const durationCell = document.createElement("td");
+  durationCell.textContent = session.duration;
+  newRow.appendChild(durationCell);
+
+  // Total column
+  const totalCell = document.createElement("td");
+  totalCell.textContent = session.total;
+  newRow.appendChild(totalCell);
+
+  // Modify button column
+  const modifyButtonCell = document.createElement("td");
+  const modifyButton = document.createElement("button");
+  modifyButton.textContent = "Modify";
+  modifyButton.classList.add("modify-button");
+  modifyButton.addEventListener("click", function () {
+    modifySession(newRow, session);
+  });
+  modifyButtonCell.appendChild(modifyButton);
+  newRow.appendChild(modifyButtonCell);
+
+  // Delete button column
+  createDeleteButton(newRow, session);
+
+  sessionTableBody.appendChild(newRow);
 }
 
 function calculateSummary() {
@@ -177,7 +261,7 @@ function calculateSummary() {
   }
 
   const avgIntensity = rowCount > 0 ? totalIntensity / rowCount : 0;
-  const avgElapsedTime = formatTime(Math.round(totalElapsedTime / rowCount));
+  const avgElapsedTime = formatTime(totalElapsedTime);
   const totalActualTimeFormatted = formatTime(totalActualTime);
 
   avgIntensityCell.textContent = `${Math.round(avgIntensity)}%`;
@@ -188,7 +272,7 @@ function calculateSummary() {
 function resetTimer() {
   hours = 0;
   minutes = 0;
-seconds = 0;
+  seconds = 0;
   timerDisplay.textContent = "00:00:00";
   startButton.disabled = false;
   stopButton.disabled = true;
@@ -201,7 +285,7 @@ function formatDate(date) {
 }
 
 function formatTime(date) {
-  const options = { hour: "numeric", minute: "numeric", hour12: true };
+  const options = { hour: "numeric", minute: "numeric", hour12: false };
   return date.toLocaleString("en-US", options);
 }
 
