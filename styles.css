@@ -44,7 +44,7 @@ button:disabled {
 }
 
 table {
-  width: 103.8%;
+  width: 100%;
   border-collapse: collapse;
 }
 
@@ -54,7 +54,7 @@ thead {
 }
 
 th, td {
-  padding: 10px;
+  padding: 10px 0px;
   border-bottom: 1px solid #ddd;
 }
 
