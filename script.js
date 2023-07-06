@@ -71,8 +71,8 @@ function pad(value) {
 function endSession() {
   const now = new Date();
   const dateTime = now.toLocaleString();
-  const activity = prompt("Enter the activity:");
-  const intensity = parseFloat(prompt("Enter the intensity percentage (0-100):"));
+  const activity = prompt("What did you do?:");
+  const intensity = parseFloat(prompt("How focused were you on a scale of 0~100%:"));
 
   const elapsedTime = hours * 3600 + minutes * 60 + seconds;
   const actualTime = elapsedTime * (intensity / 100);
