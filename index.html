@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Study Timer</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Study Timer</h1>
+    <div id="timer">00:00:00</div>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+    <button id="endSessionButton">End Session</button>
+
+    <div id="sessionTable">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Activity</th>
+            <th>Intensity (%)</th>
+            <th>Duration</th>
+            <th>Total</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="sessionTableBody"></tbody>
+        <tfoot>
+          <tr id="summaryRow">
+            <td colspan="2">Summary:</td>
+            <td id="avgIntensityCell">0%</td>
+            <td id="avgElapsedTimeCell">00:00:00</td>
+            <td id="totalActualTimeCell">00:00:00</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
