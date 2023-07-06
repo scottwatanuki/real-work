@@ -24,11 +24,7 @@ To use the Real Time web application, simply log onto the website at https://sco
 
 1. Clone the repository: `git clone <git@github.com:scottwatanuki/studytracker.git>`
 2. Open the index.html file in your web browser.
-3. Use the Start, Stop, and End Session buttons to track your study time.
-4. Fill in the activity name and intensity percentage when prompted and click the End Session button.
-5. The study session will be logged in the table below the timer.
-6. Use the Delete button to remove any study sessions from the table.
-7. The summary row will display average intensity, average elapsed time, and total actual time.
+3. Start using the application!
 
 ## Contributing
 
