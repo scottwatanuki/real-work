@@ -309,3 +309,18 @@ function timeToSeconds(time) {
 
   return hours * 3600 + minutes * 60 + seconds;
 }
+
+// Create a new web worker
+const worker = new Worker('worker.js');
+
+// Send a message to the web worker
+worker.postMessage(10);
+
+// Listen for messages from the web worker
+worker.addEventListener('message', function (event) {
+  // Access the result sent from the web worker using event.data
+  console.log('Result from web worker:', event.data);
+});
+
+// Terminate the web worker when it is no longer needed
+worker.terminate();
