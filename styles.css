@@ -83,13 +83,3 @@ tfoot {
   border-radius: 5px;
   cursor: pointer;
 }
-
-.modify-button {
-  font-size: 15px;
-  padding: 4px 8px;
-  background-color: #0044ff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}

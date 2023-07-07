@@ -31,16 +31,44 @@ previousSessions.forEach(session => {
 // Calculate and display summary
 calculateSummary();
 
+// Variable to store the start time
+let startTime;
+
+// Check if the timer is already running
+if (localStorage.getItem("timerRunning") === "true") {
+  const storedStartTime = localStorage.getItem("startTime");
+  if (storedStartTime) {
+    const currentTime = new Date().getTime();
+    const elapsedMillis = currentTime - parseInt(storedStartTime);
+    const elapsedSeconds = Math.floor(elapsedMillis / 1000);
+
+    // Restore the timer values
+    hours = Math.floor(elapsedSeconds / 3600);
+    minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    seconds = elapsedSeconds % 60;
+  }
+}
+
+// Start the timer if it was previously running
+if (localStorage.getItem("timerRunning") === "true") {
+  startTimer();
+}
+
 // Event listeners for buttons
 startButton.addEventListener("click", startTimer);
 stopButton.addEventListener("click", stopTimer);
 endSessionButton.addEventListener("click", endSession);
 
 function startTimer() {
+  startTime = new Date().getTime();
   timerInterval = setInterval(incrementTimer, 1000);
   startButton.disabled = true;
   stopButton.disabled = false;
   endSessionButton.disabled = false;
+
+  // Store the start time and timer state in local storage
+  localStorage.setItem("startTime", startTime.toString());
+  localStorage.setItem("timerRunning", "true");
 }
 
 function stopTimer() {
@@ -48,6 +76,10 @@ function stopTimer() {
   startButton.disabled = false;
   stopButton.disabled = true;
   endSessionButton.disabled = false;
+
+  // Clear the start time and timer state from local storage
+  localStorage.removeItem("startTime");
+  localStorage.setItem("timerRunning", "false");
 }
 
 function incrementTimer() {
@@ -130,43 +162,8 @@ function createTableRow(session) {
 
   // Modify/Delete button column
   const modifyDeleteButtonCell = document.createElement("td");
-  const modifyButton = document.createElement("button");
-  modifyButton.textContent = "Modify";
-  modifyButton.classList.add("modify-button");
-  modifyButton.addEventListener("click", function () {
-    modifySession(newRow, session);
-  });
-  modifyDeleteButtonCell.appendChild(modifyButton);
   newRow.appendChild(modifyDeleteButtonCell);
-
   sessionTableBody.appendChild(newRow);
-}
-
-function modifySession(row, session) {
-  const activity = prompt("Modify the activity:", session.activity);
-  const intensity = parseFloat(prompt("Modify the intensity percentage (0-100):", session.intensity));
-
-  if (activity !== null && intensity !== null) {
-    session.activity = activity;
-    session.intensity = intensity;
-
-    const elapsedTime = hours * 3600 + minutes * 60 + seconds;
-    const actualTime = elapsedTime * (intensity / 100);
-
-    session.duration = formatTime(elapsedTime);
-    session.total = formatTime(actualTime);
-
-    row.cells[1].textContent = activity;
-    row.cells[2].textContent = intensity;
-    row.cells[3].textContent = session.duration;
-    row.cells[4].textContent = session.total;
-
-    // Save updated sessions to localStorage
-    localStorage.setItem("studySessions", JSON.stringify(previousSessions));
-
-    // Calculate and display summary
-    calculateSummary();
-  }
 }
 
 function createDeleteButton(row, session) {
@@ -225,17 +222,6 @@ function createTableRow(session) {
   const totalCell = document.createElement("td");
   totalCell.textContent = session.total;
   newRow.appendChild(totalCell);
-
-  // Modify button column
-  const modifyButtonCell = document.createElement("td");
-  const modifyButton = document.createElement("button");
-  modifyButton.textContent = "Modify";
-  modifyButton.classList.add("modify-button");
-  modifyButton.addEventListener("click", function () {
-    modifySession(newRow, session);
-  });
-  modifyButtonCell.appendChild(modifyButton);
-  newRow.appendChild(modifyButtonCell);
 
   // Delete button column
   createDeleteButton(newRow, session);
